@@ -30,12 +30,33 @@ public class MainActivity extends Activity {
         initTestData();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (mFloatWindowView != null) {
-            mFloatWindowView.startFlyingAnim();
+    private void initParamsAndValues() {
+        mContext = this;
+
+        mDataList = new ArrayList<>();
+        mAdapter = new RecyclerAdapter(mDataList);
+
+    }
+
+    private void initViews() {
+        mRecyclerView = findViewById(R.id.recyclerview);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
+        mFloatWindowView = new FloatWindowView(mContext);
+    }
+
+    private void initTestData() {
+        for (int i = 0; i < 20; i++) {
+            mDataList.add("当前时间：" + LogUtils.getCurrentTime());
         }
+
+        mRecyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter.notifyDataSetChanged();
+            }
+        }, 1000);
     }
 
     @Override
@@ -52,35 +73,5 @@ public class MainActivity extends Activity {
             mFloatWindowView.closeFloatView();
         }
         super.onDestroy();
-    }
-
-    private void initParamsAndValues() {
-        mContext = this;
-
-        mDataList = new ArrayList<>();
-        mAdapter = new RecyclerAdapter(mDataList);
-
-    }
-
-    private void initViews() {
-        mRecyclerView = findViewById(R.id.recyclerview);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
-        mFloatWindowView = new FloatWindowView(mContext);
-        mFloatWindowView.startFlyingAnim();
-    }
-
-    private void initTestData() {
-        for (int i = 0; i < 20; i++) {
-            mDataList.add("当前时间：" + LogUtils.getCurrentTime());
-        }
-
-        mRecyclerView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mAdapter.notifyDataSetChanged();
-            }
-        }, 1000);
     }
 }
