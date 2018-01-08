@@ -22,10 +22,10 @@ import android.widget.LinearLayout;
 /**
  * Created by ZhangXinmin on 2018/1/4.
  * Copyright (c) 2018 . All rights reserved.
- * 悬浮窗控件
+ * 应用内部悬浮窗控件
  */
 
-public final class FloatWindowView extends View implements
+public final class InnerFloatWindowView implements
         View.OnTouchListener {
 
     private static final float SCALE_SIZE = 0.75f;
@@ -53,8 +53,7 @@ public final class FloatWindowView extends View implements
     private ValueAnimator mAnimator;
     private BounceInterpolator mBounceInterpolator;
 
-    public FloatWindowView(Context context) {
-        super(context);
+    public InnerFloatWindowView(Context context) {
 
         initParamsAndViews(context);
     }
@@ -81,6 +80,7 @@ public final class FloatWindowView extends View implements
             LogUtils.logE("windowmanager is null");
             return;
         }
+
         //get default screen information
         final Display mDisplay = mWindowManager.getDefaultDisplay();
         mLayoutParams = new WindowManager.LayoutParams();
@@ -120,7 +120,6 @@ public final class FloatWindowView extends View implements
             }
 
         }*/
-        mLayoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION;
         mBounceInterpolator = new BounceInterpolator();
         //on touch
         mRootView.setOnTouchListener(this);
@@ -152,6 +151,7 @@ public final class FloatWindowView extends View implements
                 cancelBounceAnimator();
                 break;
             case MotionEvent.ACTION_MOVE:
+
                 final float changeX = event.getRawX() - lastX;
                 final float changeY = event.getRawY() - getStatusBarHeight() - lastY;
                 mLayoutParams.x = (int) changeX;
@@ -160,7 +160,6 @@ public final class FloatWindowView extends View implements
                 break;
             case MotionEvent.ACTION_UP:
                 int startX = mLayoutParams.x;
-                LogUtils.logIWithTime("ACTION_UP：" + startX);
                 int endX = (startX * 2 + v.getWidth() > mScreenWidth ?
                         mScreenWidth - v.getWidth()
                         :
